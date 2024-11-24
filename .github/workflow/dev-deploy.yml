@@ -1,0 +1,13 @@
+name: Pipeline for Dev deployment
+
+on:
+  push:
+    branches:
+      - "dev*"
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/aws-deploy.yml
+    with:
+      environment: "dev"
+    secrets: inherit
