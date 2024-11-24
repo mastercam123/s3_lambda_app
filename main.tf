@@ -90,3 +90,11 @@ resource "aws_iam_role_policy_attachment" "attach_deny_outside_test_bucket_polic
 ###########
 # Create the required resources for the tasks
 ###########
+## Fetch AWS Managed policy for lambda attach it to the role
+data "aws_iam_policy" "lambda_full_access" {
+  name = "AWSLambda_FullAccess"
+}
+resource "aws_iam_role_policy_attachment" "attach_lambda_policy" {
+  policy_arn = data.aws_iam_policy.lambda_full_access.arn
+  role       = aws_iam_role.github_action_role.name
+}
