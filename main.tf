@@ -103,13 +103,27 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_policy" {
 #######################################################################
 # Create the required resources for the tasks
 #######################################################################
+## Create S3 bucket for the data
 resource "aws_s3_bucket" "string_bucket" {
   bucket = var.s3_task_bucket_name
   acl    = "private"
 }
+## Call module to create lambda function for reversed string
 module "name_prefix_filter" {
   source         = "./tf-modules/s3-reversed"
   s3_bucket_name = var.s3_task_bucket_name
   input_prefix   = var.input_prefix_filter
   output_prefix  = var.output_prefix_filter
+}
+## Create S3 Bucket notification for the lambda function
+resource "aws_s3_bucket_notification" "object_put_notification" {
+  bucket = aws_s3_bucket.string_bucket.id
+
+  lambda_function {
+    lambda_function_arn = module.name_prefix_filter.lambda_function_arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = var.input_prefix_filter
+  }
+
+  depends_on = [module.name_prefix_filter]
 }
