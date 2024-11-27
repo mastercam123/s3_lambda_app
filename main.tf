@@ -98,3 +98,8 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_policy" {
   policy_arn = data.aws_iam_policy.lambda_full_access.arn
   role       = aws_iam_role.github_action_role.name
 }
+
+
+#######################################################################
+# Create the required resources for the tasks
+#######################################################################
