@@ -2,7 +2,7 @@
 # S3 Bucket variables to get string and store reversed string
 ###########
 variable "s3_bucket_name" {
-  description = "Name of the S3 bucket to get andstore the string data"
+  description = "Name of the S3 bucket to get and store the string data"
   type        = string
 }
 variable "input_prefix" {

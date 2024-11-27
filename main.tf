@@ -103,3 +103,13 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_policy" {
 #######################################################################
 # Create the required resources for the tasks
 #######################################################################
+resource "aws_s3_bucket" "string_bucket" {
+  bucket = var.s3_task_bucket_name
+  acl    = "private"
+}
+module "name_prefix_filter" {
+  source         = "./tf-modules/s3-reversed"
+  s3_bucket_name = var.s3_task_bucket_name
+  input_prefix   = var.input_prefix_filter
+  output_prefix  = var.output_prefix_filter
+}
