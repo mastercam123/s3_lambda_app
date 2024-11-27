@@ -9,20 +9,24 @@ s3 = boto3.client('s3')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+# Prefix and S3 value
+bucket_name = os.environ.get('BUCKET_NAME', 'my-bucket')
+input_prefix = os.environ.get('INPUT_PREFIX', 'original/')
+output_prefix = os.environ.get('OUTPUT_PREFIX', 'reversed/')
+
 def lambda_handler(event, context):
         
     try:
-        bucket_name = event['Records'][0]['s3']['bucket']['name']
         object_key = event['Records'][0]['s3']['object']['key']
         
         # Check if the uploaded file is in the 'original/' prefix
-        if not object_key.startswith('original/'):
-            print(f"Skipping file: {object_key}, not in 'original/' prefix.")
+        if not object_key.startswith(input_prefix):
+            print(f"Skipping file: {object_key}, not in {input_prefix} prefix.")
             return {"status": "skipped"}
 
         logger.info(f"Processing file {object_key} from bucket {bucket_name}")
 
-        # Extract the base file name (without the original/ prefix)
+        # Extract the base file name (without the input prefix)
         file_name = os.path.basename(object_key)
         base_name, ext = os.path.splitext(file_name)
 
@@ -39,12 +43,11 @@ def lambda_handler(event, context):
         
         # Define the new file name and path for the reversed content
         new_file_name = f"{base_name}_reversed{ext}"
-        new_object_key = f"reversed/{new_file_name}"
+        new_object_key = f"{output_prefix}{new_file_name}"
         
-        reversed_key = f"reversed/{new_file_name}"
-        logger.info(f"Path to reserved content: {reversed_key}")
-        # Upload the reversed content to S3
+        logger.info(f"Path to reserved content: {new_object_key}")
 
+        # Upload the reversed content to S3
         s3.put_object(
             Bucket=bucket_name,
             Key=new_object_key,
