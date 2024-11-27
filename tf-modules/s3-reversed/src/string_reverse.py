@@ -10,13 +10,27 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Prefix and S3 value
-bucket_name = os.environ.get('BUCKET_NAME', 'my-bucket')
-input_prefix = os.environ.get('INPUT_PREFIX', 'original/')
-output_prefix = os.environ.get('OUTPUT_PREFIX', 'reversed/')
+def get_env_var():
+    try:
+        bucket_name = os.environ['bucket_name']
+        input_prefix = os.environ['input_prefix']
+        output_prefix = os.environ['output_prefix']
+    except KeyError as e:
+        logger.error(f"Error: {e}")
+        raise
+    return bucket_name, input_prefix, output_prefix
+#bucket_name = os.environ.get('bucket_name', 'Environment Variable does not exist')
+#input_prefix = os.environ.get('input_prefix', 'Environment Variable does not exist')
+#output_prefix = os.environ.get('output_prefix', 'Environment Variable does not exist')
+
 
 def lambda_handler(event, context):
         
     try:
+        # Get the bucket name and prefixes from the environment variables
+        bucket_name, input_prefix, output_prefix = get_env_var()
+
+        # Get the object key from the S3 event
         object_key = event['Records'][0]['s3']['object']['key']
         
         # Check if the uploaded file is in the 'original/' prefix
