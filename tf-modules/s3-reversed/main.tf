@@ -19,7 +19,7 @@ data "archive_file" "lambda_reverse_function" {
 resource "aws_lambda_function" "rewrite_lambda_function" {
   function_name    = var.lambda_function_name
   role             = aws_iam_role.lambda_reverse_role.arn
-  filename         = "${path.module}/src/backup-fail-resources.zip"
+  filename         = "${path.module}/src/string_reverse_function.zip"
   runtime          = "python3.11"
   source_code_hash = data.archive_file.lambda_reverse_function.output_base64sha256
   handler          = "string_reverse.lambda_handler"

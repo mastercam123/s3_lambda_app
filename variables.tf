@@ -50,7 +50,7 @@ variable "input_prefix_filter" {
   type        = string
   default     = "original/"
   validation {
-    condition     = can(regex("/$", var.output_prefix_filter))
+    condition     = can(regex("/$", var.input_prefix_filter))
     error_message = "The prefix must end with '/'"
   }
 }
