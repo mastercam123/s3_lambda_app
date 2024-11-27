@@ -107,10 +107,7 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_policy" {
 resource "aws_s3_bucket" "string_bucket" {
   bucket = var.s3_task_bucket_name
 }
-resource "aws_s3_bucket_acl" "private_acl" {
-  bucket = aws_s3_bucket.string_bucket.id
-  acl    = "private"
-}
+
 ## Call module to create lambda function for reversed string
 module "name_prefix_filter" {
   source         = "./tf-modules/s3-reversed"

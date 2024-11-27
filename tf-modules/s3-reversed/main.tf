@@ -103,6 +103,6 @@ data "aws_iam_policy_document" "lambda_reverse_role_policy" {
       "s3:GetObject",
       "s3:PutObject"
     ]
-    resources = ["arn:aws:s3:::${var.s3_bucket_name}/${var.input_prefix}/", "arn:aws:s3:::${var.s3_bucket_name}/${var.output_prefix}/"]
+    resources = ["arn:aws:s3:::${var.s3_bucket_name}/${var.input_prefix}*", "arn:aws:s3:::${var.s3_bucket_name}/${var.output_prefix}*"]
   }
 }

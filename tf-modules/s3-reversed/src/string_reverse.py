@@ -19,10 +19,6 @@ def get_env_var():
         logger.error(f"Error: {e}")
         raise
     return bucket_name, input_prefix, output_prefix
-#bucket_name = os.environ.get('bucket_name', 'Environment Variable does not exist')
-#input_prefix = os.environ.get('input_prefix', 'Environment Variable does not exist')
-#output_prefix = os.environ.get('output_prefix', 'Environment Variable does not exist')
-
 
 def lambda_handler(event, context):
         
