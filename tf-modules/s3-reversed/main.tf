@@ -1,6 +1,9 @@
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
+locals {
+  s3_bucket_arn = join("", ["arn:aws:s3:::", var.s3_bucket_name])
+}
 ###########
 # Lambda to read, reverse and put data back to S3 bucket
 ###########
@@ -33,6 +36,14 @@ resource "aws_lambda_function" "rewrite_lambda_function" {
     }
   }
   depends_on = [aws_cloudwatch_log_group.lambda_log_group_reverse]
+}
+
+resource "aws_lambda_permission" "allow_bucket" {
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.rewrite_lambda_function.arn
+  principal     = "s3.amazonaws.com"
+  source_arn    = local.s3_bucket_arn
 }
 
 #### IAM Role for lambda execution
