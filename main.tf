@@ -115,6 +115,7 @@ module "name_prefix_filter" {
   s3_bucket_name = local.s3_bucket_name_state_file
   input_prefix   = var.input_prefix_filter
   output_prefix  = var.output_prefix_filter
+  env_prefix     = var.env_prefix
 }
 ## Create S3 Bucket notification for the lambda function
 resource "aws_s3_bucket_notification" "object_put_notification" {
