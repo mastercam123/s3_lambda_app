@@ -37,17 +37,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform format check
-        env:
-          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
-        working-directory: ./environments/$ENV_PREFIX
         run: terraform fmt -check
         continue-on-error: true
 
       - name: Terraform Init and Validate
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
-        working-directory: ./environments/$ENV_PREFIX
         run: |
+          cd environments/$ENV_PREFIX
           terraform init
           terraform validate -no-color
 
@@ -55,8 +52,9 @@ jobs:
         id: plan
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
-        working-directory: ./environments/$ENV_PREFIX
-        run: terraform plan -no-color -var env_prefix=$ENV_PREFIX
+        run: |
+          cd environments/$ENV_PREFIX
+          terraform plan -no-color -var env_prefix=$ENV_PREFIX
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -68,13 +66,15 @@ jobs:
         id: apply
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
-        working-directory: ./environments/$ENV_PREFIX
-        run: terraform apply -var env_prefix=$ENV_PREFIX -auto-approve
+        run: |
+          cd environments/$ENV_PREFIX
+          terraform apply -var env_prefix=$ENV_PREFIX -auto-approve
 
       - name: Terraform Destroy
         if: vars.TF_DESTROY == 'true'
         id: destroy
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
-        working-directory: ./environments/$ENV_PREFIX
-        run: terraform destroy -var env_prefix=$ENV_PREFIX -auto-approve
+        run: |
+          cd environments/$ENV_PREFIX
+          terraform destroy -var env_prefix=$ENV_PREFIX -auto-approve
