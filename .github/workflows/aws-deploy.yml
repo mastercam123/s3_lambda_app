@@ -60,16 +60,10 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-      - name: Output variable
-        id: output
-        run: |
-          echo "TF_destroy: ${{ steps.print.outputs.TF_DESTROY }}"
-          echo
-
       - name: Terraform Apply
         if: vars.TF_DESTROY != 'true'
         id: apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var env_prefix=$ENV_PREFIX
 
       - name: Terraform Destroy
         if: vars.TF_DESTROY == 'true'
