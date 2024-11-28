@@ -64,10 +64,10 @@ jobs:
           echo "TF_destroy: ${{ steps.print.outputs.TF_DESTROY }}"
           echo
 
-      # - name: Terraform Apply
-      #   if: ${{ steps.print.outputs.TF_DESTROY }} != 'yes'
-      #   id: apply
-      #   run: terraform apply -auto-approve
+      - name: Terraform Apply
+        if: steps.print.outputs.TF_DESTROY != 'yes'
+        id: apply
+        run: terraform apply -auto-approve
 
       # - name: Terraform Destroy
       #   if: ${{ vars.TF_DESTROY }} == 'yes'
