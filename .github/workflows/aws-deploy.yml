@@ -25,8 +25,6 @@ jobs:
         run: |
           echo "GH_ROLE_ARN: ${{ vars.GH_ROLE_ARN }}"
           echo "TF_DESTROY=${{ vars.TF_DESTROY }}" >> $GITHUB_OUTPUT
-          ID_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://demo" | jq -r .value)
-          echo $ID_TOKEN | base64
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -60,10 +58,16 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-      - name: Terraform Apply
-        if: ${{ steps.print.outputs.TF_DESTROY }} != 'yes'
-        id: apply
-        run: terraform apply -auto-approve
+      - name: Output variable
+        id: output
+        run: |
+          echo "TF_destroy: ${{ steps.print.outputs.TF_DESTROY }}"
+          echo
+
+      # - name: Terraform Apply
+      #   if: ${{ steps.print.outputs.TF_DESTROY }} != 'yes'
+      #   id: apply
+      #   run: terraform apply -auto-approve
 
       # - name: Terraform Destroy
       #   if: ${{ vars.TF_DESTROY }} == 'yes'
