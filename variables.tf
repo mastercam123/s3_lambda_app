@@ -18,7 +18,6 @@ variable "GitHub_Repository" {
   description = "The GitHub Repository"
   type        = string
   default     = "s3_lambda_app"
-
 }
 
 variable "env_prefix" {
