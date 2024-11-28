@@ -23,6 +23,7 @@ jobs:
       - name: Print variable
         run: |
           echo "GH_ROLE_ARN: ${{ vars.GH_ROLE_ARN }}"
+          echo "TF Status: ${{ vars.TF_DESTROY }}"
           ID_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://demo" | jq -r .value)
           echo $ID_TOKEN | base64
 
@@ -58,12 +59,12 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-      - name: Terraform Apply
-        if: ${{ vars.TF_DESTROY }} != 'yes'
-        id: apply
-        run: terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   if: ${{ vars.TF_DESTROY }} != 'yes'
+      #   id: apply
+      #   run: terraform apply -auto-approve
 
-      - name: Terraform Destroy
-        if: ${{ vars.TF_DESTROY }} == 'yes'
-        id: destroy
-        run: terraform destroy -auto-approve
+      # - name: Terraform Destroy
+      #   if: ${{ vars.TF_DESTROY }} == 'yes'
+      #   id: destroy
+      #   run: terraform destroy -auto-approve
