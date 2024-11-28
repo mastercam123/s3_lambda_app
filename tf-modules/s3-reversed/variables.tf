@@ -16,7 +16,6 @@ variable "output_prefix" {
 variable "env_prefix" {
   description = "The prefix for the environment"
   type        = string
-  default     = {}
 }
 ###########
 # Lambda to reverse string
