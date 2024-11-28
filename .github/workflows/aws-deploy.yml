@@ -36,7 +36,8 @@ jobs:
       - name: Change directory depends on environment
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
-        run: cd terraform ./environments/$ENV_PREFIX
+        run: |
+          cd ./environments/$ENV_PREFIX
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
