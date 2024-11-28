@@ -9,5 +9,5 @@ jobs:
   deploy:
     uses: ./.github/workflows/aws-deploy.yml
     with:
-      gh_environment: "dev"
+      gh_environment: "prod"
     secrets: inherit
