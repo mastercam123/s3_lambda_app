@@ -59,11 +59,11 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: ${{ vars.TF_DESTROY }} != 'true'
+        if: ${{ vars.TF_DESTROY }} != 'yes'
         id: apply
         run: terraform apply -auto-approve
 
       - name: Terraform Destroy
-        if: ${{ vars.TF_DESTROY }} == 'true'
+        if: ${{ vars.TF_DESTROY }} == 'yes'
         id: destroy
         run: terraform destroy -auto-approve
