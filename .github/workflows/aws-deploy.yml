@@ -33,32 +33,29 @@ jobs:
           role-session-name: reverse-lambda-${{ github.run_number }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Change directory depends on environment
-        env:
-          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
-        run: |
-          cd ./environments/$ENV_PREFIX
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform fmt
-        id: fmt
+      - name: Terraform format check
+        env:
+          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        working-directory: ./environments/$ENV_PREFIX
         run: terraform fmt -check
         continue-on-error: true
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+      - name: Terraform Init and Validate
+        env:
+          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        working-directory: ./environments/$ENV_PREFIX
+        run: |
+          terraform init
+          terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        working-directory: ./environments/$ENV_PREFIX
         run: terraform plan -no-color -var env_prefix=$ENV_PREFIX
         continue-on-error: true
 
@@ -71,6 +68,7 @@ jobs:
         id: apply
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        working-directory: ./environments/$ENV_PREFIX
         run: terraform apply -var env_prefix=$ENV_PREFIX -auto-approve
 
       - name: Terraform Destroy
@@ -78,4 +76,5 @@ jobs:
         id: destroy
         env:
           ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        working-directory: ./environments/$ENV_PREFIX
         run: terraform destroy -var env_prefix=$ENV_PREFIX -auto-approve
