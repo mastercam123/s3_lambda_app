@@ -73,4 +73,4 @@ def lambda_handler(event, context):
         logger.error(f"Error processing file: {e}", exc_info=True)
         raise
     finally:
-        print("...Ending the function")
+        print("....Ending the function")
