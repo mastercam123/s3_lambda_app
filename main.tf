@@ -2,7 +2,7 @@ locals {
   string_development_branch = join("", ["repo:", var.GitHub_Organization, "/", var.GitHub_Repository, ":ref:refs/heads", var.Repository_dev_branch, "*"])
   string_production_branch  = join("", ["repo:", var.GitHub_Organization, "/", var.GitHub_Repository, ":ref:refs/heads", var.Repository_prod_branch, "*"])
   string_tag                = join("", ["repo:", var.GitHub_Organization, "/", var.GitHub_Repository, ":ref:refs/tags/v*"])
-  s3_bucket_name_state_file = join("", [var.s3_task_bucket_name, "-", var.env_prefix])
+  s3_bucket_name_state_file = join("-", [var.env_prefix, var.s3_task_bucket_name])
 }
 
 ###########
