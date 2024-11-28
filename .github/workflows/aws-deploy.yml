@@ -65,7 +65,7 @@ jobs:
           echo
 
       - name: Terraform Apply
-        if: steps.print.outputs.TF_DESTROY != 'yes'
+        if: vars.TF_DESTROY != 'yes'
         id: apply
         run: terraform apply -auto-approve
 
