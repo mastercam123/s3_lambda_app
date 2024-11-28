@@ -51,7 +51,9 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        env:
+          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        run: terraform plan -no-color -var env_prefix=$ENV_PREFIX
         continue-on-error: true
 
       - name: Terraform Plan Status

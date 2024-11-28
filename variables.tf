@@ -21,6 +21,12 @@ variable "GitHub_Repository" {
 
 }
 
+variable "env_prefix" {
+  description = "The prefix for the environment"
+  type        = string
+  default     = {}
+}
+
 variable "Repository_dev_branch" {
   description = "The GitHub Repository for development branch"
   type        = string
