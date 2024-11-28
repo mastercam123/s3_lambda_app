@@ -1,4 +1,4 @@
-name: AWS Deploy
+name: AWS Deploy using Terraform
 
 on:
   workflow_call:
@@ -22,6 +22,10 @@ jobs:
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.GH_ROLE_ARN }}
+          role-session-name: reverse-lambda-${{ github.run_number }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
@@ -80,3 +84,11 @@ jobs:
               repo: context.repo.repo,
               body: output
             });
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      #- name: Terraform Apply
+      #  id: apply
+      #  run: terraform apply -auto-approve
