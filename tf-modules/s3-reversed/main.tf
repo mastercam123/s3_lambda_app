@@ -4,6 +4,7 @@ data "aws_caller_identity" "current" {}
 locals {
   s3_bucket_arn        = join("", ["arn:aws:s3:::", var.s3_bucket_name])
   lambda_function_name = join("-", [var.env_prefix, var.lambda_function_name])
+  iam_role_name        = join("-", [var.env_prefix, var.lambda_role])
 }
 ###########
 # Lambda to read, reverse and put data back to S3 bucket
@@ -49,7 +50,7 @@ resource "aws_lambda_permission" "allow_bucket" {
 
 #### IAM Role for lambda execution
 resource "aws_iam_role" "lambda_reverse_role" {
-  name               = var.lambda_role
+  name               = local.iam_role_name
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

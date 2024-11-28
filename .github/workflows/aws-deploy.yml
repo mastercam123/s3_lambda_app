@@ -33,6 +33,11 @@ jobs:
           role-session-name: reverse-lambda-${{ github.run_number }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Change directory depends on environment
+        env:
+          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        run: cd terraform ./environments/$ENV_PREFIX
+
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
