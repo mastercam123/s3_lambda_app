@@ -2,6 +2,7 @@ locals {
   string_development_branch = join("", ["repo:", var.GitHub_Organization, "/", var.GitHub_Repository, ":ref:refs/heads", var.Repository_dev_branch, "*"])
   string_production_branch  = join("", ["repo:", var.GitHub_Organization, "/", var.GitHub_Repository, ":ref:refs/heads", var.Repository_prod_branch, "*"])
   string_tag                = join("", ["repo:", var.GitHub_Organization, "/", var.GitHub_Repository, ":ref:refs/tags/v*"])
+  s3_bucket_name_state_file = join("-", [var.env_prefix, var.s3_task_bucket_name])
 }
 
 ###########
@@ -105,15 +106,16 @@ locals {
 #######################################################################
 ## Create S3 bucket for the data
 resource "aws_s3_bucket" "string_bucket" {
-  bucket = var.s3_task_bucket_name
+  bucket = local.s3_bucket_name_state_file
 }
 
 ## Call module to create lambda function for reversed string
 module "name_prefix_filter" {
   source         = "./tf-modules/s3-reversed"
-  s3_bucket_name = var.s3_task_bucket_name
+  s3_bucket_name = local.s3_bucket_name_state_file
   input_prefix   = var.input_prefix_filter
   output_prefix  = var.output_prefix_filter
+  env_prefix     = var.env_prefix
 }
 ## Create S3 Bucket notification for the lambda function
 resource "aws_s3_bucket_notification" "object_put_notification" {

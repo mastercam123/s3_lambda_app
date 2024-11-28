@@ -1,0 +1,75 @@
+name: AWS Deploy using Terraform
+
+on:
+  workflow_call:
+    inputs:
+      gh_environment:
+        description: "The GitHub environment to deploy to"
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.gh_environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Print variable
+        id: print
+        run: |
+          echo "GH_ROLE_ARN: ${{ vars.GH_ROLE_ARN }}"
+          echo "TF_DESTROY=${{ vars.TF_DESTROY }}" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.GH_ROLE_ARN }}
+          role-session-name: reverse-lambda-${{ github.run_number }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        env:
+          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        run: terraform plan -no-color -var env_prefix=$ENV_PREFIX
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Apply
+        if: vars.TF_DESTROY != 'true'
+        id: apply
+        env:
+          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        run: terraform apply -var env_prefix=$ENV_PREFIX -auto-approve
+
+      - name: Terraform Destroy
+        if: vars.TF_DESTROY == 'true'
+        id: destroy
+        env:
+          ENV_PREFIX: ${{ vars.ENV_PREFIX }}
+        run: terraform destroy -var env_prefix=$ENV_PREFIX -auto-approve

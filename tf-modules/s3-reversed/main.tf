@@ -2,14 +2,15 @@ data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
 locals {
-  s3_bucket_arn = join("", ["arn:aws:s3:::", var.s3_bucket_name])
+  s3_bucket_arn        = join("", ["arn:aws:s3:::", var.s3_bucket_name])
+  lambda_function_name = join("-", [var.env_prefix, var.lambda_function_name])
 }
 ###########
 # Lambda to read, reverse and put data back to S3 bucket
 ###########
 #### Lambda log group
 resource "aws_cloudwatch_log_group" "lambda_log_group_reverse" {
-  name              = "/aws/lambda/${var.lambda_function_name}"
+  name              = "/aws/lambda/${local.lambda_function_name}"
   retention_in_days = var.log_group_retention_period
 }
 #### Lambda resource
@@ -20,7 +21,7 @@ data "archive_file" "lambda_reverse_function" {
 }
 
 resource "aws_lambda_function" "rewrite_lambda_function" {
-  function_name    = var.lambda_function_name
+  function_name    = local.lambda_function_name
   role             = aws_iam_role.lambda_reverse_role.arn
   filename         = "${path.module}/src/string_reverse_function.zip"
   runtime          = "python3.11"

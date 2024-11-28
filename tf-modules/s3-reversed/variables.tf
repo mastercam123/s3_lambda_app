@@ -13,7 +13,10 @@ variable "output_prefix" {
   description = "Prefix for the output data in S3 bucket"
   type        = string
 }
-
+variable "env_prefix" {
+  description = "The prefix for the environment"
+  type        = string
+}
 ###########
 # Lambda to reverse string
 ###########
