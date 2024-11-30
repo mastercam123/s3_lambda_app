@@ -32,37 +32,37 @@ resource "aws_s3_bucket_notification" "object_put_notification" {
 }
 
 ## Create IAM Role
-resource "aws_iam_role" "test_iam_role" {
-  name = "test_iam_role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-  managed_policy_arns = [aws_iam_policy.policy_ec.arn]
-}
-resource "aws_iam_policy" "policy_ec2" {
-  name = "policy-ec2"
+# resource "aws_iam_role" "test_iam_role" {
+#   name = "test_iam_role"
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = "sts:AssumeRole"
+#         Effect = "Allow"
+#         Sid    = ""
+#         Principal = {
+#           Service = "ec2.amazonaws.com"
+#         }
+#       },
+#     ]
+#   })
+#   managed_policy_arns = [aws_iam_policy.policy_ec.arn]
+# }
+# resource "aws_iam_policy" "policy_ec2" {
+#   name = "policy-ec2"
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = ["ec2:Describe*"]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-    ]
-  })
-}
-resource "aws_s3_bucket" "test_dev_bucket" {
-  bucket = "test-dev1-bucket-husain-2024"
-}
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action   = ["ec2:Describe*"]
+#         Effect   = "Allow"
+#         Resource = "*"
+#       },
+#     ]
+#   })
+# }
+# resource "aws_s3_bucket" "test_dev_bucket" {
+#   bucket = "test-dev1-bucket-husain-2024"
+# }
