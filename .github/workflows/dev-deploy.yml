@@ -6,7 +6,26 @@ on:
       - "dev*"
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Filter paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            app:
+              - '.github/workflows/**'
+              - 'tf-modules/**'
+              - 'environments/development/*'
   deploy:
+    needs: changes
+    if: ${{ needs.changes.outputs.app == 'true' }}
     uses: ./.github/workflows/aws-deploy.yml
     with:
       gh_environment: "dev"
