@@ -28,3 +28,9 @@ variable "output_prefix_filter" {
     error_message = "The prefix must end with '/'"
   }
 }
+
+variable "additional_tags" {
+  description = "Additional tags to be added to the resources"
+  type        = string
+  default     = "test"
+}
