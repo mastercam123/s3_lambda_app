@@ -62,4 +62,7 @@ resource "aws_iam_policy" "policy_ec2" {
       },
     ]
   })
+
+resource "aws_s3_bucket" "test_dev_bucket" {
+  bucket = "test-dev1-bucket-husain-2024"
 }
