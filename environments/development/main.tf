@@ -30,3 +30,7 @@ resource "aws_s3_bucket_notification" "object_put_notification" {
 
   depends_on = [module.name_prefix_filter]
 }
+
+resource "aws_s3_bucket" "test_dev_bucket" {
+  bucket = "test-dev1-bucket-husain-2024"
+}
