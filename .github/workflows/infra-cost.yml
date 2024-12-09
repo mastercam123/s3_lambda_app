@@ -24,9 +24,10 @@ jobs:
                 ref: '${{ github.event.pull_request.base.ref }}'
             # Generate Infracost JSON file as the baseline.
             - name: Generate Infracost cost estimate baseline
-              working-directory: ./environments/development
               run: |
                 echo ${{secrets.INFRACOST_API_KEY}} | sed 's/./& /g'
+                cd environments/development
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
                 infracost breakdown --path=. \
                             --format=json \
                             --out-file=/tmp/infracost-base.json
