@@ -26,9 +26,9 @@ jobs:
             - name: Generate Infracost cost estimate baseline
               run: |
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
-                infracost breakdown --path=environments/development \
-                            --format=json \
-                            --out-file=/tmp/infracost-base.json
+                infracost breakdown --path=environments/development 
+#                            --format=json \
+#                            --out-file=/tmp/infracost-base.json
                 echo "Check is done"
             # Checkout the pull request branch.
             - name: Checkout pull request branch
@@ -38,7 +38,8 @@ jobs:
             # Generate Infracost diff and save it to a JSON file
             - name: Generate Infracost diff
               run: |
-                infracost diff --path=. \
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+                infracost diff --path=environments/development \
                             --format=json \
                             --compare-to=/tmp/infracost-base.json \
                             --output-file=/tmp/infracost-diff.json 
