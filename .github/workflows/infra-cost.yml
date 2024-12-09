@@ -26,7 +26,7 @@ jobs:
             - name: Generate Infracost cost estimate baseline
               run: |
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
-                infracost breakdown --path=environments/development 
+                infracost breakdown --path=environments/development \
                             --format=json \
                             --out-file=/tmp/infracost-base.json
                 echo "Check is done"
