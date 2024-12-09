@@ -25,12 +25,11 @@ jobs:
             # Generate Infracost JSON file as the baseline.
             - name: Generate Infracost cost estimate baseline
               run: |
-                echo ${{secrets.INFRACOST_API_KEY}} | sed 's/./& /g'
-                cd environments/development
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
-                infracost breakdown --path=. \
+                infracost breakdown --path=environments/development \
                             --format=json \
                             --out-file=/tmp/infracost-base.json
+                echo "Check is done"
             # Checkout the pull request branch.
             - name: Checkout pull request branch
               uses: actions/checkout@v4
