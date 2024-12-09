@@ -31,38 +31,17 @@ resource "aws_s3_bucket_notification" "object_put_notification" {
   depends_on = [module.name_prefix_filter]
 }
 
-## Create IAM Role
-# resource "aws_iam_role" "test_iam_role" {
-#   name = "test_iam_role"
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole"
-#         Effect = "Allow"
-#         Sid    = ""
-#         Principal = {
-#           Service = "ec2.amazonaws.com"
-#         }
-#       },
-#     ]
-#   })
-#   managed_policy_arns = [aws_iam_policy.policy_ec.arn]
-# }
-# resource "aws_iam_policy" "policy_ec2" {
-#   name = "policy-ec2"
-
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action   = ["ec2:Describe*"]
-#         Effect   = "Allow"
-#         Resource = "*"
-#       },
-#     ]
-#   })
-# }
-# resource "aws_s3_bucket" "test_dev_bucket" {
-#   bucket = "test-dev1-bucket-husain-2024"
-# }
+resource "aws_ebs_volume" "test_infraacost" {
+  availability_zone = "eu-central-1"
+  size              = 1
+  tags = {
+    Name = "MyEBSVolume"
+  }
+}
+resource "aws_ec2_instance" "test_infraacost" {
+  ami           = "ami-0a628e1e89aaedf80"
+  instance_type = "t2.micro"
+  tags = {
+    Name = "infracost"
+  }
+}
