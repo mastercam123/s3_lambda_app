@@ -39,7 +39,7 @@ jobs:
             - name: Generate Infracost diff
               run: |
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
-                infracost diff --path=environments/development \
+                infracost diff --path=environments/production \
                             --format=json \
                             --show-skipped \
                             --compare-to=/tmp/infracost-base.json \
