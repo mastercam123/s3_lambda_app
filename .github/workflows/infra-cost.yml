@@ -49,7 +49,15 @@ jobs:
               run: |
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
                 infracost output --path /tmp/infracost.json --show-skipped --format html --out-file report.html
-
+            # Post Infracost commit   
+            - name: Post Infracost comment
+              run: |
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+                infracost comment github --path=/tmp/infracost.json \
+                                --repo=$GITHUB_REPOSITORY \
+                                --github-token=${{github.token}} \
+                                --pull-request=${{github.event.pull_request.number}} \
+                                --behavior=update \
 ## infracost
 #--format=json \
 #--out-file=/tmp/infracost-base.json
