@@ -43,7 +43,7 @@ jobs:
                             --format=json \
                             --show-skipped \
                             --compare-to=/tmp/infracost-base.json \
-                            --output-file=/tmp/infracost.json 
+                            --out-file=/tmp/infracost.json 
             # Generate HTML report
             - name: Generate Infracost HTML report
               run: |
