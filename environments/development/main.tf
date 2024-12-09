@@ -38,7 +38,7 @@ resource "aws_ebs_volume" "test_infraacost" {
     Name = "MyEBSVolume"
   }
 }
-resource "aws_ec2_instance" "test_infraacost" {
+resource "aws_instance" "test_infraacost" {
   ami           = "ami-0a628e1e89aaedf80"
   instance_type = "t2.micro"
   tags = {
