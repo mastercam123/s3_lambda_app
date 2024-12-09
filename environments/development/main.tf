@@ -32,8 +32,8 @@ resource "aws_s3_bucket_notification" "object_put_notification" {
 }
 
 resource "aws_ebs_volume" "test_infraacost" {
-  availability_zone = "eu-central-1"
-  size              = 1
+  availability_zone = "eu-central-1a"
+  size              = 16
   tags = {
     Name = "MyEBSVolume"
   }
