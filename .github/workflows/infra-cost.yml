@@ -27,8 +27,8 @@ jobs:
               run: |
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
                 infracost breakdown --path=environments/development 
-#                            --format=json \
-#                            --out-file=/tmp/infracost-base.json
+                            --format=json \
+                            --out-file=/tmp/infracost-base.json
                 echo "Check is done"
             # Checkout the pull request branch.
             - name: Checkout pull request branch
@@ -41,5 +41,15 @@ jobs:
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
                 infracost diff --path=environments/development \
                             --format=json \
+                            --show-skipped \
                             --compare-to=/tmp/infracost-base.json \
-                            --output-file=/tmp/infracost-diff.json 
+                            --output-file=/tmp/infracost.json 
+            # Generate HTML report
+            - name: Generate Infracost HTML report
+              run: |
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+                infracost output --path /tmp/infracost.json --show-skipped --format html --out-file report.html
+
+## infracost
+#--format=json \
+#--out-file=/tmp/infracost-base.json
