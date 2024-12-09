@@ -1,0 +1,42 @@
+on:
+    pull_request:
+      types: [opened, synchronize, closed]
+    push:
+      branches:
+        - main
+jobs:
+    infracost-pull-request-checks:
+        name: Infracost Pull Request Checks
+        if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+        steps:
+            - name: Setup Infracost
+              uses: infracost/actions/setup@v3
+              with:
+                  api_key: ${{ secrets.INFRACOST_API_KEY }}
+            # Checkout the base branch of the pull request (e.g. main/master).
+            - name: Checkout base branch
+              uses: actions/checkout@v4
+              with:
+                ref: '${{ github.event.pull_request.base.ref }}'
+            # Generate Infracost JSON file as the baseline.
+            - name: Generate Infracost cost estimate baseline
+              run: |
+                infracost breakdown --path=. \
+                            --format=json \
+                            --out-file=/tmp/infracost-base.json
+            # Checkout the pull request branch.
+            - name: Checkout pull request branch
+              uses: actions/checkout@v4
+              with:
+                ref: '${{ github.event.pull_request.head.ref }}'
+            # Generate Infracost diff and save it to a JSON file
+            - name: Generate Infracost diff
+              run: |
+                infracost diff --path=. \
+                            --format=json \
+                            --compare-to=/tmp/infracost-base.json \
+                            --output-file=/tmp/infracost-diff.json 
