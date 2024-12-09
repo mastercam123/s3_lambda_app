@@ -8,9 +8,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "hsn-oidc-test-2024"
-    key    = "development/terraform.tfstate"
-    region = "eu-central-1"
+    bucket         = "hsn-oidc-test-2024"
+    key            = "development/terraform.tfstate"
+    region         = "eu-central-1"
+    dynamodb_table = "tf_lock_table"
   }
 }
 

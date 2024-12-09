@@ -1,0 +1,72 @@
+on:
+    pull_request:
+      types: [opened, synchronize, closed]
+    push:
+      branches:
+        - main
+jobs:
+    infracost-pull-request-checks:
+        name: Infracost Pull Request Checks
+        if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+            id-token: write
+        steps:
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: ${{ vars.GH_ROLE_ARN }}
+                role-session-name: reverse-lambda-${{ github.run_number }}
+                aws-region: ${{ vars.AWS_REGION }}
+
+            - name: Setup Infracost
+              uses: infracost/actions/setup@v3
+              with:
+                  api_key: ${{ secrets.INFRACOST_API_KEY }}
+            # Checkout the base branch of the pull request (e.g. main/master).
+            - name: Checkout base branch
+              uses: actions/checkout@v4
+              with:
+                ref: '${{ github.event.pull_request.base.ref }}'
+            # Generate Infracost JSON file as the baseline.
+            - name: Generate Infracost cost estimate baseline
+              run: |
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+                infracost breakdown --path=environments/development \
+                            --format=json \
+                            --out-file=/tmp/infracost-base.json
+                echo "Check is done"
+            # Checkout the pull request branch.
+            - name: Checkout pull request branch
+              uses: actions/checkout@v4
+              with:
+                ref: '${{ github.event.pull_request.head.ref }}'
+            # Generate Infracost diff and save it to a JSON file
+            - name: Generate Infracost diff
+              run: |
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+                infracost diff --path=environments/production \
+                            --format=json \
+                            --show-skipped \
+                            --compare-to=/tmp/infracost-base.json \
+                            --out-file=/tmp/infracost.json 
+            # Generate HTML report
+            - name: Generate Infracost HTML report
+              run: |
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+                infracost output --path /tmp/infracost.json --show-skipped --format html --out-file report.html
+                aws s3 cp report.html s3://hsn-oidc-test-2024/report.html
+            # Post Infracost commit   
+            - name: Post Infracost comment
+              run: |
+                export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+                infracost comment github --path=/tmp/infracost.json \
+                                --repo=$GITHUB_REPOSITORY \
+                                --github-token=${{github.token}} \
+                                --pull-request=${{github.event.pull_request.number}} \
+                                --behavior=update \
+## infracost
+#--format=json \
+#--out-file=/tmp/infracost-base.json

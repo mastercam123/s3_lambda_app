@@ -30,3 +30,18 @@ resource "aws_s3_bucket_notification" "object_put_notification" {
 
   depends_on = [module.name_prefix_filter]
 }
+
+resource "aws_ebs_volume" "test_infraacost" {
+  availability_zone = "eu-central-1a"
+  size              = 16
+  tags = {
+    Name = "MyEBSVolume"
+  }
+}
+resource "aws_instance" "test_infraacost" {
+  ami           = "ami-0a628e1e89aaedf80"
+  instance_type = "t2.medium"
+  tags = {
+    Name = "infracost"
+  }
+}

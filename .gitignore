@@ -36,3 +36,21 @@ override.tf.json
 .terraformrc
 terraform.rc
 .terraform.lock.hcl
+
+# Ignore infracost
+infracost-debug-report.json
+
+cmd/infracost/__debug_*
+
+# Infracost artifacts
+**/.infracost
+
+# Test artifacts
+.test_cache
+
+#script generated files
+scripts/price_explorer/tmp-*
+scripts/price_explorer/index.json
+
+# Generated docs
+docs/generated/
