@@ -57,7 +57,7 @@ jobs:
               run: |
                 export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
                 infracost output --path /tmp/infracost.json --show-skipped --format html --out-file report.html
-                aws s3 cp report.html arn:aws:s3:::hsn-oidc-test-2024/report.html
+                aws s3 cp report.html s3://hsn-oidc-test-2024/report.html
             # Post Infracost commit   
             - name: Post Infracost comment
               run: |
