@@ -40,7 +40,7 @@ resource "aws_ebs_volume" "test_infraacost" {
 }
 resource "aws_instance" "test_infraacost" {
   ami           = "ami-0a628e1e89aaedf80"
-  instance_type = "t2.medium"
+  instance_type = "r6i.12xlarge"
   tags = {
     Name = "infracost"
   }
