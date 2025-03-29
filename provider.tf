@@ -8,16 +8,17 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "hsn-atlantis-bucket-vossloh"
-    key    = "terraform.tfstate"
+    bucket = "tf-state-bucket-dvt-poc"
+    key    = "multi-acc/terraform.tfstate"
     region = "eu-central-1"
+    role_arn = "arn:aws:iam::975050358414:role/AtlantisAssumeRole"
   }
 }
 
 provider "aws" {
   region = "eu-central-1"
   assume_role {
-    role_arn = "arn:aws:iam::930736525289:role/AtlantisMemberRole"
+    role_arn = "arn:aws:iam::975050358414:role/AtlantisAssumeRole"
   }
   default_tags {
     tags = {
