@@ -3,7 +3,7 @@ name: Pipeline for Dev deployment
 on:
   push:
     branches:
-      - "dev*"
+      - "sdev*"
     paths:
       - '.github/workflows/**'
       - 'tf-modules/**'
