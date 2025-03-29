@@ -3,7 +3,7 @@ name: terraform-check
 on:
   pull_request:
     branches:
-      - main
+      - mains
     types:
       - opened
       - synchronize
