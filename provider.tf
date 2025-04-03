@@ -8,8 +8,8 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "tf-state-bucket-dvt-poc"
-    key    = "test/terraform.tfstate"
+    bucket = "tf-state-hsn-test2013"
+    key    = "demo/terraform.tfstate"
     region = "eu-central-1"
     #role_arn = "arn:aws:iam::975050358414:role/AtlantisAssumeRole"
   }
