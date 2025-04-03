@@ -54,3 +54,5 @@ scripts/price_explorer/index.json
 
 # Generated docs
 docs/generated/
+
+/environments

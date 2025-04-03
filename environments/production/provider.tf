@@ -8,10 +8,9 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "hsn-oidc-test-2024"
-    key            = "production/terraform.tfstate"
+    bucket         = "tf-state-bucket-dvt-poc"
+    key            = "lambda-hsn/terraform.tfstate"
     region         = "eu-central-1"
-    dynamodb_table = "tf_lock_table"
   }
 }
 
