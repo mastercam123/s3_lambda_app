@@ -17,9 +17,9 @@ terraform {
 
 provider "aws" {
   region = "eu-central-1"
-  assume_role {
-    role_arn = "arn:aws:iam::975050358414:role/AtlantisAssumeRole"
-  }
+  # assume_role {
+  #   role_arn = "arn:aws:iam::975050358414:role/AtlantisAssumeRole"
+  # }
   default_tags {
     tags = {
       managed_by = "Terraform_atlantis"
